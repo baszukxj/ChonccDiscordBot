@@ -1,4 +1,3 @@
-C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csprojAssemblyReference.cache
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\MarketDataMonitorAPI.exe.config
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\MarketDataMonitorAPI.exe
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\MarketDataMonitorAPI.pdb
@@ -11,3 +10,4 @@ C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csproj.CopyComplete
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.exe
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.pdb
+C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csprojAssemblyReference.cache
