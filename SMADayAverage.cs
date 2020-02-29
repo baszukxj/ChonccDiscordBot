@@ -11,7 +11,7 @@ namespace MarketDataMonitorAPI
     public class SMADayAverage
     {
 
-        public void SMACurrentAverage(int periodNum)
+        public decimal SMACurrentAverage(int periodNum)
         {
             Configuration.Default.AddApiKey("api_key", "OjI0MmFhYmZmODViODJjNDhkODZhNjZmOGE1NmZkNTFh");
 
@@ -28,20 +28,19 @@ namespace MarketDataMonitorAPI
             //string endDateTime = endDate.ToString();
             var pageSizeNum = pageSize.ToString();
 
-            try
-            {
-                ApiResponseSecuritySimpleMovingAverage result = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey,  /*startDateTime, endDateTime,*/ pageSizeNum, nextPage);
-                Console.WriteLine(result.ToJson());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception when calling SecurityApi.GetSecurityPriceTechnicalsSma: " + e.Message);
-            }
+            //try
+            //{
+            //    ApiResponseSecuritySimpleMovingAverage result = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey,  /*startDateTime, endDateTime,*/ pageSizeNum, nextPage);
+            //    Console.WriteLine(result.ToJson());
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Exception when calling SecurityApi.GetSecurityPriceTechnicalsSma: " + e.Message);
+            //}
 
             var smaAverage = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey, /*startDateTime, endDateTime,*/ pageSizeNum, nextPage).Technicals;
 
-            //gets the first from list of 20 day SMA
-
+        
             var x = new List<float>();
 
             //adds every line of the SMA to a new list
@@ -49,19 +48,29 @@ namespace MarketDataMonitorAPI
             {
                 var SMA = line.Sma.GetValueOrDefault();
                 x.Add(SMA);
-                Console.WriteLine(SMA);
+               // Console.WriteLine(SMA);
             }
             var sum = x.Sum();
-            Console.WriteLine(sum);
+            decimal newSum = Convert.ToDecimal(sum);
+            //Console.WriteLine(sum);
 
             //calls api and gets the lastes price
             var realtimePrice = securityApi.GetSecurityRealtimePrice(identifier);
             var latestPrice = realtimePrice.LastPrice;
-            Console.WriteLine($"LatestPrice: {latestPrice}");
 
+            //converts nullable decemal to decemcial
+            decimal? a = latestPrice;
+            decimal b = a ?? -1;
+           
 
-            Console.ReadLine();
-            return;
+            //adds the sum of last 7 day x period sma plus current price then divides by all to get current average sma for x period
+            var sumSMA = newSum + b;
+            var CurrentAverageSMA = sumSMA / 8;
+
+            
+            //returns currentaverageSMA 
+            return CurrentAverageSMA;
+            
         }
 
 
