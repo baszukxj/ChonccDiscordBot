@@ -136,7 +136,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuyShares.cs" />
     <Compile Include="GetLatestPrice.cs" />
+    <Compile Include="SellShares.cs" />
     <Compile Include="SMADayAverage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
