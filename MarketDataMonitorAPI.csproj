@@ -136,8 +136,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountSummary.cs" />
     <Compile Include="BuyShares.cs" />
     <Compile Include="GetLatestPrice.cs" />
+    <Compile Include="OpenPositions.cs" />
     <Compile Include="SellShares.cs" />
     <Compile Include="SMADayAverage.cs" />
     <Compile Include="Program.cs" />

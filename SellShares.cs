@@ -7,7 +7,6 @@ namespace MarketDataMonitorAPI
 {
      public class SellShares
      {
-
         private static string API_KEY = "PK43DG0LFRIX11TF9LF8";
 
         private static string API_SECRET = "VbqwOhfIf8HWU5XngW/mp40A7kOhcHkeg4Km7CcL";

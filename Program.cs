@@ -36,10 +36,15 @@ namespace Example
             SellShares sell = new SellShares();
             var sellTicker = sell.ExecuteOrder("AAPL");
 
+
+            ////initializes method from OpenPositions class and pings back open positions in portfolio
+            //OpenPositions ViewOpenPositions = new OpenPositions();
+            //var open = ViewOpenPositions.ViewOpenAccountPositions();
+
             //initializes method from Account Summary class then displays gain/loss on account for the intraday
             AccountSummary ViewAccountSummary = new AccountSummary();
             var portfolioBalance = ViewAccountSummary.ExecuteBalanceView();
-            Console.WriteLine(portfolioBalance);
+
 
 
             Console.ReadLine();
