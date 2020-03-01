@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Intrinio.SDK.Api;
-using Intrinio.SDK.Client;
-using Intrinio.SDK.Model;
 using MarketDataMonitorAPI;
 
 namespace Example
 {
     public class GetSecurityPriceTechnicalsSmaExample
     {
-
 
         public static void Main()
         {
@@ -35,10 +28,25 @@ namespace Example
 
             Console.WriteLine($"LatestPrice: {currentTickerPrice}");
 
+            //initializes method from BuyShares class and then executes buy order for ticker
+            BuyShares buy = new BuyShares();
+            var buyTicker = buy.ExecuteOrder("AAPL");
+
+            Console.WriteLine(buyTicker);
+
+            //initializes method from SellShares class and then executes sell order for ticker
+            SellShares sell = new SellShares();
+            var sellTicker = sell.ExecuteOrder("AAPL");
+
+            Console.WriteLine(sellTicker);
+
             Console.ReadLine();
 
 
-          
+            //***************Next todo on Agenda*******************
+            //create loop for cycling through the monitoring api and conditions for buying and selling
+
+
         }
 
     }
