@@ -10,8 +10,8 @@ C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csproj.CopyComplete
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.exe
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.pdb
-C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csprojAssemblyReference.cache
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\Alpaca.Markets.dll
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\SuperSocket.ClientEngine.dll
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\WebSocket4Net.dll
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\Alpaca.Markets.xml
+C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csprojAssemblyReference.cache

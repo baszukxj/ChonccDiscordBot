@@ -1,5 +1,6 @@
 ﻿using Alpaca.Markets;
 using System;
+using System.Configuration;
 using System.Threading.Tasks;
 
 
@@ -7,9 +8,9 @@ namespace MarketDataMonitorAPI
 {
      public class BuyShares
      {
-        private static string API_KEY = "PK43DG0LFRIX11TF9LF8";
+        private static string API_KEY = ConfigurationManager.AppSettings["AlpacaAPIKey"];
+        private static string API_SECRET = ConfigurationManager.AppSettings["AlpacaAPISecret"];
 
-        private static string API_SECRET = "VbqwOhfIf8HWU5XngW/mp40A7kOhcHkeg4Km7CcL";
 
         public async Task ExecuteOrder(string ticker)
         {
