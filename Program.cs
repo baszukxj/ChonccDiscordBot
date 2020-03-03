@@ -99,7 +99,7 @@ namespace Example
 
                 //calls task method and returns value for gain or loss
                 var change = ViewOpenPositions.ViewPositionUnrealizedProfitLoss(tickerSymbol);
-                var gainloss = change.Result;
+                var gainOrLoss = change.Result;
                 //Console.WriteLine(gainloss);
 
 
@@ -139,18 +139,22 @@ namespace Example
                         var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
                         continue;
                     }
-                    else if (gainloss <= maximumLoss)
+                    else if (gainOrLoss <= maximumLoss)
                     {
                         //initializes method from SellShares class and then executes sell order for ticker
                         SellShares sell = new SellShares();
                         var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
                         continue;
                     }
-                    else if (gainloss <= maximumGain)
+                    else if (gainOrLoss >= maximumGain)
                     {
                         //initializes method from SellShares class and then executes sell order for ticker
                         SellShares sell = new SellShares();
                         var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
+                        continue;
+                    }
+                    else 
+                    {
                         continue;
                     }
 
