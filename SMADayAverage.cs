@@ -67,11 +67,7 @@ namespace MarketDataMonitorAPI
             var totalSMA = firstNum + b;
             var trueSMA = totalSMA / 2;
 
-           // var CurrentAverageSMA = sumSMA / 2;
-            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            Console.WriteLine(trueSMA);
-            Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-            //returns currentaverageSMA 
+
             return trueSMA;
 
         }

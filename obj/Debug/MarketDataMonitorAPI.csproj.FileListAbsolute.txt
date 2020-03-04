@@ -14,3 +14,4 @@ C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\SuperSocket.ClientEngine.dll
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\WebSocket4Net.dll
 C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\bin\Debug\Alpaca.Markets.xml
+C:\Users\Xavier Adams\source\repos\MarketDataMonitorAPI\MarketDataMonitorAPI\obj\Debug\MarketDataMonitorAPI.csprojAssemblyReference.cache

@@ -1,5 +1,6 @@
 ﻿using Alpaca.Markets;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 
@@ -10,20 +11,26 @@ namespace MarketDataMonitorAPI
         private static string API_KEY = ConfigurationManager.AppSettings["AlpacaAPIKey"];
         private static string API_SECRET = ConfigurationManager.AppSettings["AlpacaAPISecret"];
 
-
+        
         public async Task<int> ViewOpenSharesQuantity(string ticker)
         {
             var client = Environments.Paper
                 .GetAlpacaTradingClient(API_KEY, new SecretKey(API_SECRET));
 
             // Get our position in AAPL.
-            var tickerPosition = await client.GetPositionAsync(ticker);
+            try
+            {
+                var tickerPosition = await client.GetPositionAsync(ticker);
 
-            var quantity = tickerPosition.Quantity;
+                var quantity = tickerPosition.Quantity;
 
-            //Console.WriteLine(quantity);
-            return quantity;
-
+                return quantity;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+           
         }
 
         public async Task<string> ViewPositionSymbol(string ticker)
@@ -31,13 +38,21 @@ namespace MarketDataMonitorAPI
             var client = Environments.Paper
                 .GetAlpacaTradingClient(API_KEY, new SecretKey(API_SECRET));
 
-            // Get our position in AAPL.
-            var tickerPosition = await client.GetPositionAsync(ticker);
+            try
+            {
+                // Get our position in AAPL.
+                var tickerPosition = await client.GetPositionAsync(ticker);
 
-            var symbol = tickerPosition.Symbol;
+                var symbol = tickerPosition.Symbol;
 
-           // Console.WriteLine(symbol);
-            return symbol;
+                return symbol;
+            }
+            catch (Exception) 
+            {
+                return null;
+            }
+            // Console.WriteLine(symbol);
+           
 
         }
 
@@ -46,14 +61,22 @@ namespace MarketDataMonitorAPI
             var client = Environments.Paper
                 .GetAlpacaTradingClient(API_KEY, new SecretKey(API_SECRET));
 
-            // Get our position in AAPL.
-            var tickerPosition = await client.GetPositionAsync(ticker);
 
-            var change = tickerPosition.IntradayUnrealizedProfitLoss;
+            try
+            {
+                // Get our position in AAPL.
+                var tickerPosition = await client.GetPositionAsync(ticker);
 
-           // Console.WriteLine(change);
-            return change;
+                var change = tickerPosition.IntradayUnrealizedProfitLoss;
 
+                return change;
+            }
+            catch (Exception) 
+            {
+                return 0;
+            }
         }
+
+
     }
 }
