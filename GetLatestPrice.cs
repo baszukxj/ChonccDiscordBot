@@ -27,7 +27,7 @@ namespace MarketDataMonitorAPI
             }
             catch (Exception e)
             {
-                var b = 0;
+                var b = 1;
                 Console.WriteLine("Exception when calling SecurityApi.GetSecurityRealtimePrice: " + e.Message);
                 return b;
             }
