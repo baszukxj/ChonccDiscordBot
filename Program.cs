@@ -193,7 +193,7 @@ namespace Example
 
             AccountSummary AccountSummary = new AccountSummary();
             var totalGainLoss = AccountSummary.ExecuteBalanceView();
-            Console.WriteLine($"${totalGainLoss}");
+            
 
             Console.ReadLine();
 
