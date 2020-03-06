@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Intrinio.SDK.Api;
 using Intrinio.SDK.Client;
+using Intrinio.SDK.Model;
 
 namespace MarketDataMonitorAPI
 {
     public class SMADayAverage
     {
-       
+
         public decimal SMACurrentAverage(int periodNum, string ticker)
         {
             Configuration.Default.AddApiKey("api_key", "OmUyNmI4NzVjYjBjZjYyYzIxM2E5OTUzOTg4ODBkOTI0");
@@ -28,48 +29,57 @@ namespace MarketDataMonitorAPI
 
             //try
             //{
-            //    ApiResponseSecuritySimpleMovingAverage result = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey,  /*startDateTime, endDateTime,*/ pageSizeNum, nextPage);
+            //    ApiResponseSecuritySimpleMovingAverage result = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey,  startDateTime, endDateTime, pageSize, nextPage);
             //    Console.WriteLine(result.ToJson());
             //}
             //catch (Exception e)
             //{
             //    Console.WriteLine("Exception when calling SecurityApi.GetSecurityPriceTechnicalsSma: " + e.Message);
             //}
-           
-            var smaAverage = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey, startDateTime, endDateTime, pageSize, nextPage).Technicals;
-            
-            //Creats a float list and names it x
-            var x = new List<float>();
 
-            //adds every line of the SMA to float list named x
-            foreach (var line in smaAverage)
+            try
             {
-                  var SMA = line.Sma.GetValueOrDefault();
-                  x.Add(SMA);
+                //put entrie method into try catch block
+                var smaAverage = securityApi.GetSecurityPriceTechnicalsSma(identifier, period, priceKey, startDateTime, endDateTime, pageSize, nextPage).Technicals;
+
+                //Creats a float list and names it x
+                var x = new List<float>();
+
+                //adds every line of the SMA to float list named x
+                foreach (var line in smaAverage)
+                {
+                    var SMA = line.Sma.GetValueOrDefault();
+                    x.Add(SMA);
                     //Console.WriteLine(SMA);
+                }
+                var firstInList = x.FirstOrDefault();
+                decimal firstNum = Convert.ToDecimal(firstInList);
+
+                // var sum = x.Sum();
+                // decimal newSum = Convert.ToDecimal(sum); 
+
+                //calls api and gets the lastes price
+                var realtimePrice = securityApi.GetSecurityRealtimePrice(identifier);
+                var latestPrice = realtimePrice.LastPrice;
+
+                //converts nullable decemal to decemcial
+                decimal? a = latestPrice;
+                decimal b = a ?? -1;
+
+                //adds the sum of last 7 day x period sma plus current price then divides by all to get current average sma for x period
+                //var sumSMA = newSum + b;
+                var totalSMA = firstNum + b;
+                var trueSMA = totalSMA / 2;
+
+                return trueSMA;
             }
-            var firstInList = x.FirstOrDefault();
-            decimal firstNum = Convert.ToDecimal(firstInList);
-
-           // var sum = x.Sum();
-           // decimal newSum = Convert.ToDecimal(sum); 
-
-            //calls api and gets the lastes price
-            var realtimePrice = securityApi.GetSecurityRealtimePrice(identifier);
-            var latestPrice = realtimePrice.LastPrice;
-
-            //converts nullable decemal to decemcial
-            decimal? a = latestPrice;
-            decimal b = a ?? -1;
-
-            //adds the sum of last 7 day x period sma plus current price then divides by all to get current average sma for x period
-            //var sumSMA = newSum + b;
-            var totalSMA = firstNum + b;
-            var trueSMA = totalSMA / 2;
-
-
-            return trueSMA;
-
+            catch (Exception e)
+            {
+                decimal trueSMA = 0;
+                Console.WriteLine("Exception when calling SecurityApi.GetSecurityPriceTechnicalsSma: " + e.Message);
+                return trueSMA;
+                
+            }
         }
 
 

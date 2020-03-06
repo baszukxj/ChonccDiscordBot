@@ -12,18 +12,20 @@ namespace Example
         {
             //string tickerSymbol = "AAPL";
 
-            #region Test Code/Classes
+            //#region Test Code/Classes
             ////initializes method from SMADayAverage class and sets it to a variable
             //SMADayAverage RealTimeSMA = new SMADayAverage();
 
             ////calls method from SMADayAverage class
-            //var SMAAverageDay_20 = RealTimeSMA.SMACurrentAverage(20, tickerSymbol);
-            //var SMAAverageDay_10 = RealTimeSMA.SMACurrentAverage(10, tickerSymbol);
+            //var SMAAverageDay_13 = RealTimeSMA.SMACurrentAverage(13, tickerSymbol);
+            //var SMAAverageDay_8 = RealTimeSMA.SMACurrentAverage(8, tickerSymbol);
             //var SMAAverageDay_5 = RealTimeSMA.SMACurrentAverage(5, tickerSymbol);
 
-            //Console.WriteLine($"20SMA: { SMAAverageDay_20}");
-            //Console.WriteLine($"10SMA: {SMAAverageDay_10}");
+            //Console.WriteLine($"20SMA: { SMAAverageDay_13}");
+            //Console.WriteLine($"10SMA: {SMAAverageDay_8}");
             //Console.WriteLine($"5SMA: {SMAAverageDay_5}");
+
+            //Console.ReadLine();
 
             ////initializes method from GetLatestPrice class and sets it to a variable
             //GetLatestPrice RealTimePrice = new GetLatestPrice();
@@ -46,7 +48,7 @@ namespace Example
             //var portfolioBalance = ViewAccountSummary.ExecuteAccountEquity();
 
             //beginning of the Loop---------------------------------------------------------------------------------------------------------------------------------------------------
-            #endregion
+            //#endregion
 
             //#region Timer
             ////timeer for starting the real loop at 9:30am or around that time
@@ -56,9 +58,10 @@ namespace Example
             //{
             //    Thread.Sleep(waitFiveMinutes);
             //    x++;
+            //    Console.WriteLine("tick-tock");
             //}
             //#endregion
-            
+
             List<string> tickerList = new List<string> { "AAPL", "MSFT", "CSCO" };
 
             var waitFiveSeconds = TimeSpan.FromSeconds(5);
@@ -111,34 +114,37 @@ namespace Example
                     //calls task method and returns value for symbol
                     var symbol = ViewOpenPositions.ViewPositionSymbol(tickerSymbol);
                     var tickerName = symbol.Result;
-                  
+
                     //Console.WriteLine(tickerName);
 
                     //calls task method and returns value for gain or loss
                     var change = ViewOpenPositions.ViewPositionUnrealizedProfitLoss(tickerSymbol);
                     var gainOrLoss = change.Result;
-               
+
                     //Console.WriteLine(gainloss);
 
                     //initializes method from SMADayAverage class and sets it to a variable
                     SMADayAverage RealTimeSMA = new SMADayAverage();
 
                     //calls method from SMADayAverage class
-                    var SMAAverageDay_20 = RealTimeSMA.SMACurrentAverage(20, tickerSymbol);
-                    var SMAAverageDay_10 = RealTimeSMA.SMACurrentAverage(10, tickerSymbol);
+                    var SMAAverageDay_13 = RealTimeSMA.SMACurrentAverage(13, tickerSymbol);
+                    var SMAAverageDay_8 = RealTimeSMA.SMACurrentAverage(8, tickerSymbol);
                     var SMAAverageDay_5 = RealTimeSMA.SMACurrentAverage(5, tickerSymbol);
 
-                    Console.WriteLine($"20SMA: { SMAAverageDay_20}");
-                    Console.WriteLine($"10SMA: {SMAAverageDay_10}");
+                    Console.WriteLine(tickerSymbol);
+                    Console.WriteLine($"20SMA: { SMAAverageDay_13}");
+                    Console.WriteLine($"10SMA: {SMAAverageDay_8}");
                     Console.WriteLine($"5SMA: {SMAAverageDay_5}");
+                    Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
                     if (tickerName != tickerSymbol || string.IsNullOrEmpty(tickerName))
                     {
-                        if (SMAAverageDay_5 >= SMAAverageDay_10 && _CurrentPrice > SMAAverageDay_20)
+                        if (SMAAverageDay_5 >= SMAAverageDay_8 && _CurrentPrice > SMAAverageDay_13)
                         {
                             //initializes method from BuyShares class and then executes buy order for ticker
                             BuyShares buy = new BuyShares();
                             var buyTicker = buy.ExecuteOrder(tickerSymbol, shareCount);
+                            Console.WriteLine($"Bought {shareCount} shares of {tickerSymbol} at {_CurrentPrice}");
                             continue;
 
                         }
@@ -149,11 +155,12 @@ namespace Example
                     }
                     else if (tickerName == tickerSymbol)
                     {
-                        if (SMAAverageDay_5 <= SMAAverageDay_10 && _CurrentPrice <= SMAAverageDay_20)
+                        if (SMAAverageDay_5 <= SMAAverageDay_8 && _CurrentPrice <= SMAAverageDay_13)
                         {
                             //initializes method from SellShares class and then executes sell order for ticker
                             SellShares sell = new SellShares();
                             var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
+                            Console.WriteLine($"Sold {sharesOpen} shares of {tickerSymbol} at {_CurrentPrice}");
                             continue;
                         }
                         else if (gainOrLoss <= maximumLoss)
@@ -161,6 +168,7 @@ namespace Example
                             //initializes method from SellShares class and then executes sell order for ticker
                             SellShares sell = new SellShares();
                             var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
+                            Console.WriteLine($"Sold {sharesOpen} shares of {tickerSymbol} at {_CurrentPrice}");
                             continue;
                         }
                         else if (gainOrLoss >= maximumGain)
@@ -168,6 +176,7 @@ namespace Example
                             //initializes method from SellShares class and then executes sell order for ticker
                             SellShares sell = new SellShares();
                             var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
+                            Console.WriteLine($"Sold {sharesOpen} shares of {tickerSymbol} at {_CurrentPrice}");
                             continue;
                         }
                         else

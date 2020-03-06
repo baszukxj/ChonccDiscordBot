@@ -1,6 +1,6 @@
 ﻿using Intrinio.SDK.Api;
 using Intrinio.SDK.Client;
-
+using System;
 
 namespace MarketDataMonitorAPI
 {
@@ -13,16 +13,24 @@ namespace MarketDataMonitorAPI
 
             var securityApi = new SecurityApi();
             var identifier = ticker;  // string | A Security identifier (Ticker, FIGI, ISIN, CUSIP, Intrinio ID)
+            try
+            {
+                var realtimePrice = securityApi.GetSecurityRealtimePrice(identifier);
+                var latestPrice = realtimePrice.LastPrice;
 
-            var realtimePrice = securityApi.GetSecurityRealtimePrice(identifier);
-            var latestPrice = realtimePrice.LastPrice;
+                //converts nullable decemal to decemcial
+                decimal? a = latestPrice;
+                decimal b = a ?? -1;
 
-            //converts nullable decemal to decemcial
-            decimal? a = latestPrice;
-            decimal b = a ?? -1;
-           
-
-            return b;
+                //return latestPrice;
+                return b;
+            }
+            catch (Exception e)
+            {
+                var b = 0;
+                Console.WriteLine("Exception when calling SecurityApi.GetSecurityRealtimePrice: " + e.Message);
+                return b;
+            }
         }
 
 
