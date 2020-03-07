@@ -12,7 +12,7 @@ namespace MarketDataMonitorAPI
 
         public decimal SMACurrentAverage(int periodNum, string ticker)
         {
-            Configuration.Default.AddApiKey("api_key", "OmUyNmI4NzVjYjBjZjYyYzIxM2E5OTUzOTg4ODBkOTI0");
+            Configuration.Default.AddApiKey("api_key", "OmY0M2VkYjdhMzhlYmE3Y2VhZWY4YjJiZWJlMzAzZWJi");
 
             var securityApi = new SecurityApi();
             var identifier = ticker;  // string | A Security identifier (Ticker, FIGI, ISIN, CUSIP, Intrinio ID)

@@ -9,7 +9,7 @@ namespace MarketDataMonitorAPI
 
         public decimal TickerCurrentPrice(string ticker)
         {
-            Configuration.Default.AddApiKey("api_key", "OjI0MmFhYmZmODViODJjNDhkODZhNjZmOGE1NmZkNTFh");
+            Configuration.Default.AddApiKey("api_key", "OmY0M2VkYjdhMzhlYmE3Y2VhZWY4YjJiZWJlMzAzZWJi");
 
             var securityApi = new SecurityApi();
             var identifier = ticker;  // string | A Security identifier (Ticker, FIGI, ISIN, CUSIP, Intrinio ID)

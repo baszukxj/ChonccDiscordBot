@@ -91,17 +91,17 @@ namespace Example
                     //converts portfolio balance to a double so it can be divided to get 5% of account
                     var results = portfolioBalance.Result;
                     double doublevalue = Convert.ToDouble(results);
-                    var fivePercentOfAccount = doublevalue * 0.05;
+                    var tenPercentOfAccount = doublevalue * 0.10;
                     //Console.WriteLine(fivePercentOfAccount);
 
                     //sets the maximum gain and loss the account is willing to gin and or loss then converts those values to decimals
-                    var Loss = fivePercentOfAccount * -.07;
+                    var Loss = tenPercentOfAccount * -.05;
                     decimal maximumLoss = Convert.ToDecimal(Loss);
-                    var Gain = fivePercentOfAccount * .1;
+                    var Gain = tenPercentOfAccount * .1;
                     decimal maximumGain = Convert.ToDecimal(Gain);
 
                     //figures out how many share you can buy with 5% of account then convert value from double to int and round to the nearest whole number
-                    var shareCountDouble = fivePercentOfAccount / currentPrice;
+                    var shareCountDouble = tenPercentOfAccount / currentPrice;
                     int shareCount = Convert.ToInt32(Math.Floor(shareCountDouble));
                     //Console.WriteLine(shareCount);
 
@@ -126,25 +126,32 @@ namespace Example
                     SMADayAverage RealTimeSMA = new SMADayAverage();
 
                     //calls method from SMADayAverage class
-                    var SMAAverageDay_10 = RealTimeSMA.SMACurrentAverage(10, tickerSymbol);
+                    var SMAAverageDay_11 = RealTimeSMA.SMACurrentAverage(11, tickerSymbol);
                     var SMAAverageDay_8 = RealTimeSMA.SMACurrentAverage(8, tickerSymbol);
                     var SMAAverageDay_5 = RealTimeSMA.SMACurrentAverage(5, tickerSymbol);
 
                     Console.WriteLine(tickerSymbol);
-                    Console.WriteLine($"10SMA: { SMAAverageDay_10}");
+                    Console.WriteLine($"11SMA: {SMAAverageDay_11}");
                     Console.WriteLine($"8SMA: {SMAAverageDay_8}");
                     Console.WriteLine($"5SMA: {SMAAverageDay_5}");
                     Console.WriteLine("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
-                    if (tickerName != tickerSymbol || string.IsNullOrEmpty(tickerName))
+
+                    //safeguard for if the SMA API call encounters an exception and returns a 0 so it goes back to the beginning of loop
+                    if (SMAAverageDay_11 == 0 ||SMAAverageDay_8 == 0 || SMAAverageDay_5 == 0) 
                     {
-                        if (SMAAverageDay_5 >= SMAAverageDay_8 && _CurrentPrice > SMAAverageDay_10)
+                        continue;
+                    }
+                    else if (tickerName != tickerSymbol || string.IsNullOrEmpty(tickerName))
+                    {
+                        if (SMAAverageDay_5 >= SMAAverageDay_8 && _CurrentPrice > SMAAverageDay_11)
                         {
                             //initializes method from BuyShares class and then executes buy order for ticker
                             BuyShares buy = new BuyShares();
                             var buyTicker = buy.ExecuteOrder(tickerSymbol, shareCount);
                             Console.WriteLine("-------------------------------------------------------------------------------------");
                             Console.WriteLine($"Bought {shareCount} shares of {tickerSymbol} at ${_CurrentPrice}");
+                            Console.WriteLine("-------------------------------------------------------------------------------------");
                             continue;
 
                         }
@@ -155,7 +162,7 @@ namespace Example
                     }
                     else if (tickerName == tickerSymbol)
                     {
-                        if (SMAAverageDay_5 <= SMAAverageDay_8 && _CurrentPrice <= SMAAverageDay_10)
+                        if (SMAAverageDay_5 <= SMAAverageDay_8 && _CurrentPrice <= SMAAverageDay_11)
                         {
                             //initializes method from SellShares class and then executes sell order for ticker
                             SellShares sell = new SellShares();

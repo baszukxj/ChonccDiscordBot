@@ -11,10 +11,6 @@ namespace MarketDataMonitorAPI
         private static string API_KEY = ConfigurationManager.AppSettings["AlpacaAPIKey"];
         private static string API_SECRET = ConfigurationManager.AppSettings["AlpacaAPISecret"];
 
-        //private static string API_KEY = "PKTBQ6VVXSS6QH0A6R9G";
-
-        //private static string API_SECRET = "Okl9rNweJLh2bgwBIJdZzja1FPjvTiEWI/X7wdrz";
-
         public async Task ExecuteBalanceView()
         {
            // First, open the API connection

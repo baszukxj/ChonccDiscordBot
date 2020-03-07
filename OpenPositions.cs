@@ -17,7 +17,7 @@ namespace MarketDataMonitorAPI
             var client = Environments.Paper
                 .GetAlpacaTradingClient(API_KEY, new SecretKey(API_SECRET));
 
-            // Get our position in AAPL.
+            // Get our position in the given stock
             try
             {
                 var tickerPosition = await client.GetPositionAsync(ticker);
