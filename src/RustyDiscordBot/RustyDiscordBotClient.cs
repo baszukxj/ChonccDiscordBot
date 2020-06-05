@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using RustyDiscordBot.Services;
 using System;
 using System.Threading.Tasks;
 using Victoria;
@@ -21,25 +22,39 @@ namespace RustyDiscordBot
                 AlwaysDownloadUsers = true,
                 MessageCacheSize = 50,
                 LogLevel = LogSeverity.Debug
+                
             });
 
             _cmdService = cmdService ?? new CommandService(new CommandServiceConfig
             {
                 LogLevel = LogSeverity.Verbose,
                 CaseSensitiveCommands = false
-            });
+            });                   
         }
 
         public async Task InitializeAsync()
         {
+            _services = SetupServices();
+
             await _client.LoginAsync(TokenType.Bot, "");
             await _client.StartAsync();
             _client.Log += LogAsync;
-            _services = SetupServices();
-            var cmdHandler = new CommandHandler(_client, _cmdService, _services);
+            _client.Ready += OnReadyAsync;
+            
 
+            var cmdHandler = new CommandHandler(_client, _cmdService, _services);
             await cmdHandler.InitializeAsync();
+
             await Task.Delay(-1);
+        }
+
+        private async Task OnReadyAsync()
+        {
+            if (! (_services.GetService(typeof(LavaNode)) as LavaNode).IsConnected)
+            {
+                await (_services.GetService(typeof(LavaNode)) as LavaNode).ConnectAsync();
+                return;
+            }
         }
 
         private Task LogAsync(LogMessage log)
@@ -52,8 +67,9 @@ namespace RustyDiscordBot
             => new ServiceCollection()
             .AddSingleton(_client)
             .AddSingleton(_cmdService)
-            .AddSingleton<LavaRestClient>()
-            .AddSingleton<LavaSocketClient>()
+            .AddSingleton<LavaNode>()
+            .AddSingleton<LavaConfig>()
+            .AddSingleton<MusicService>()
             .BuildServiceProvider();
     }
 }

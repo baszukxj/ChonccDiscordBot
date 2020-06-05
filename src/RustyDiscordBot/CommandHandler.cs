@@ -29,14 +29,11 @@ namespace RustyDiscordBot
         private async Task HandleMessageAsync(SocketMessage msg)
         {
             var argPos = 0;
-            if (msg.Author.IsBot) 
-                return;
-
             var userMessage = msg as SocketUserMessage;
-            if (userMessage is null) 
-                return;
 
-            if (!userMessage.HasMentionPrefix(_client.CurrentUser, ref argPos)) 
+            if ((!userMessage.HasMentionPrefix(_client.CurrentUser, ref argPos)               
+                && !userMessage.HasCharPrefix('!', ref argPos))
+                 || msg.Author.IsBot)
                 return;
 
             var context = new SocketCommandContext(_client, userMessage);
