@@ -1,5 +1,7 @@
 ﻿
+using Discord;
 using Discord.WebSocket;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,12 +13,15 @@ namespace RustyDiscordBot.Services
     public class MusicService
     {
         private readonly LavaNode _lavaNode;
+        private readonly ILogger _logger;
         public readonly HashSet<ulong> VoteQueue;
 
-        public MusicService(DiscordSocketClient socketClient, LavaNode lavaNode)
+        public MusicService(DiscordSocketClient socketClient, LavaNode lavaNode, ILogger<MusicService> logger)
         {
             socketClient.Ready += OnReady;
             _lavaNode = lavaNode;
+            _logger = logger;
+            _lavaNode.OnLog += OnLog;
             _lavaNode.OnPlayerUpdated += OnPlayerUpdated;
             _lavaNode.OnStatsReceived += OnStatsReceived;
             _lavaNode.OnTrackEnded += OnTrackEnded;
@@ -25,18 +30,23 @@ namespace RustyDiscordBot.Services
             _lavaNode.OnWebSocketClosed += OnWebSocketClosed;
 
             VoteQueue = new HashSet<ulong>();
-            
+        }
+
+        private Task OnLog(LogMessage arg)
+        {
+            _logger.LogInformation(arg.Message);
+            return Task.CompletedTask;
         }
 
         private Task OnPlayerUpdated(PlayerUpdateEventArgs arg)
         {
-            Console.WriteLine($"Player update received for {arg.Player.VoiceChannel.Name}.");
+            _logger.LogInformation($"Player update received for {arg.Player.VoiceChannel.Name}.");
             return Task.CompletedTask;
         }
 
         private Task OnStatsReceived(StatsEventArgs arg)
         {
-            Console.WriteLine($"Lavalink Uptime {arg.Uptime}.");
+            _logger.LogInformation($"Lavalink Uptime {arg.Uptime}.");
             return Task.CompletedTask;
         }
 
@@ -65,19 +75,19 @@ namespace RustyDiscordBot.Services
 
         private Task OnTrackException(TrackExceptionEventArgs arg)
         {
-            Console.WriteLine($"Track exception received for {arg.Track.Title}.");
+            _logger.LogCritical($"Track exception received for {arg.Track.Title}.");
             return Task.CompletedTask;
         }
 
         private Task OnTrackStuck(TrackStuckEventArgs arg)
         {
-            Console.WriteLine($"Track stuck received for {arg.Track.Title}.");
+            _logger.LogError($"Track stuck received for {arg.Track.Title}.");
             return Task.CompletedTask;
         }
 
         private Task OnWebSocketClosed(WebSocketClosedEventArgs arg)
         {
-            Console.WriteLine($"Discord WebSocket connection closed with following reason: {arg.Reason}");
+            _logger.LogCritical($"Discord WebSocket connection closed with following reason: {arg.Reason}");
             return Task.CompletedTask;
         }
 

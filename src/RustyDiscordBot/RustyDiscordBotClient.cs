@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RustyDiscordBot.Services;
 using System;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace RustyDiscordBot
         {
             _services = SetupServices();
 
-            await _client.LoginAsync(TokenType.Bot, "PUT-TOKEN-HERE");
+            await _client.LoginAsync(TokenType.Bot, "");
             await _client.StartAsync();
             _client.Log += LogAsync;
             _client.Ready += OnReadyAsync;
@@ -70,6 +71,7 @@ namespace RustyDiscordBot
             .AddSingleton<LavaNode>()
             .AddSingleton<LavaConfig>()
             .AddSingleton<MusicService>()
+            .AddLogging()
             .BuildServiceProvider();
     }
 }
