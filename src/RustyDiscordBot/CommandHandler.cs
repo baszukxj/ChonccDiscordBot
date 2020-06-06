@@ -31,6 +31,8 @@ namespace RustyDiscordBot
             var argPos = 0;
             var userMessage = msg as SocketUserMessage;
 
+            if (userMessage is null) return;
+
             if ((!userMessage.HasMentionPrefix(_client.CurrentUser, ref argPos)               
                 && !userMessage.HasCharPrefix('!', ref argPos))
                  || msg.Author.IsBot)

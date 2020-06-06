@@ -244,21 +244,6 @@ namespace RustyDiscordBot.Modules
                 return;
             }
 
-            var voiceChannelUsers = (player.VoiceChannel as SocketVoiceChannel).Users.Where(x => !x.IsBot).ToArray();
-            if (_musicManager.VoteQueue.Contains(Context.User.Id))
-            {
-                await ReplyAsync("You can't vote again.");
-                return;
-            }
-
-            _musicManager.VoteQueue.Add(Context.User.Id);
-            var percentage = _musicManager.VoteQueue.Count / voiceChannelUsers.Length * 100;
-            if (percentage < 85)
-            {
-                await ReplyAsync("You need more than 85% votes to skip this song.");
-                return;
-            }
-
             try
             {
                 var oldTrack = player.Track;
@@ -348,47 +333,8 @@ namespace RustyDiscordBot.Modules
             await ReplyAsync(embed: embed.Build());
         }
 
-        [Command("Genius", RunMode = RunMode.Async)]
-        public async Task ShowGeniusLyrics()
-        {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
-            {
-                await ReplyAsync("I'm not connected to a voice channel.");
-                return;
-            }
 
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await ReplyAsync("Woaaah there, I'm not playing any tracks.");
-                return;
-            }
-
-            var lyrics = await player.Track.FetchLyricsFromGeniusAsync();
-            if (string.IsNullOrWhiteSpace(lyrics))
-            {
-                await ReplyAsync($"No lyrics found for {player.Track.Title}");
-                return;
-            }
-
-            var splitLyrics = lyrics.Split('\n');
-            var stringBuilder = new StringBuilder();
-            foreach (var line in splitLyrics)
-            {
-                if (Range.Contains(stringBuilder.Length))
-                {
-                    await ReplyAsync($"```{stringBuilder}```");
-                    stringBuilder.Clear();
-                }
-                else
-                {
-                    stringBuilder.AppendLine(line);
-                }
-            }
-
-            await ReplyAsync($"```{stringBuilder}```");
-        }
-
-        [Command("OVH", RunMode = RunMode.Async)]
+        [Command("lyrics", RunMode = RunMode.Async)]
         public async Task ShowOVHLyrics()
         {
             if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
