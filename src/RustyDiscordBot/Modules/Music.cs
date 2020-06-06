@@ -333,6 +333,26 @@ namespace RustyDiscordBot.Modules
             await ReplyAsync(embed: embed.Build());
         }
 
+        [Command("Loop")]
+        public async Task Loop()
+        {
+            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            {
+                await ReplyAsync("I'm not connected to a voice channel.");
+                return;
+            }
+            if(player.Queue.Count < 1 && player.PlayerState == PlayerState.Playing)
+            {
+                player.Queue.Enqueue(player.Track);
+                await ReplyAsync("Looping song once.");
+            }
+            else
+            {
+                player.Queue.Concat(player.Queue);
+                await ReplyAsync("Looping queue once.");
+            }
+        }
+
 
         [Command("lyrics", RunMode = RunMode.Async)]
         public async Task ShowOVHLyrics()
