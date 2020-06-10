@@ -11,7 +11,7 @@ namespace Example
         public static void Main()
         {
             #region Test Code/Classes
-            
+
             //string tickerSymbol = "AAPL";
 
             ////initializes method from SMADayAverage class and sets it to a variable
@@ -50,21 +50,22 @@ namespace Example
             #endregion
 
             #region Timer
-            ////timeer for starting the real loop at 9:30am or around that time
-            //var waitFiveMinutes = TimeSpan.FromMinutes(5);
-            //int x = 0;
-            //while (x < 18)
-            //{
-            //    Thread.Sleep(waitFiveMinutes);
-            //    x++;
-            //    Console.WriteLine("tick-tock");
-            //}
+            //timeer for starting the real loop at 9:30am or around that time
+            var waitFiveMinutes = TimeSpan.FromMinutes(5);
+            int x = 0;
+            while (x < 18)
+            {
+                Thread.Sleep(waitFiveMinutes);
+                x++;
+                Console.WriteLine("tick-tock");
+            }
             #endregion
 
             List<string> tickerList = new List<string> { "AAPL", "MSFT", "CSCO" };
 
             var waitFiveSeconds = TimeSpan.FromSeconds(5);
             int i = 0;
+            
             while (i < 5399)
             {
                 Thread.Sleep(waitFiveSeconds);
@@ -97,7 +98,7 @@ namespace Example
                     //sets the maximum gain and loss the account is willing to gin and or loss then converts those values to decimals
                     var Loss = tenPercentOfAccount * -.05;
                     decimal maximumLoss = Convert.ToDecimal(Loss);
-                    var Gain = tenPercentOfAccount * .1;
+                    var Gain = tenPercentOfAccount * .15;
                     decimal maximumGain = Convert.ToDecimal(Gain);
 
                     //figures out how many share you can buy with 5% of account then convert value from double to int and round to the nearest whole number
@@ -150,7 +151,7 @@ namespace Example
                             BuyShares buy = new BuyShares();
                             var buyTicker = buy.ExecuteOrder(tickerSymbol, shareCount);
                             Console.WriteLine("-------------------------------------------------------------------------------------");
-                            Console.WriteLine($"Bought {shareCount} shares of {tickerSymbol} at ${_CurrentPrice}");
+                            Console.WriteLine($"XELINA bought {shareCount} shares of {tickerSymbol} at ${_CurrentPrice}");
                             Console.WriteLine("-------------------------------------------------------------------------------------");
                             continue;
 
@@ -168,7 +169,7 @@ namespace Example
                             SellShares sell = new SellShares();
                             var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
                             Console.WriteLine("-------------------------------------------------------------------------------------");
-                            Console.WriteLine($"Sold {sharesOpen} shares of {tickerSymbol} at ${_CurrentPrice}");
+                            Console.WriteLine($"XELINA sold {sharesOpen} shares of {tickerSymbol} at ${_CurrentPrice}");
                             continue;
                         }
                         else if (gainOrLoss <= maximumLoss)
@@ -177,7 +178,7 @@ namespace Example
                             SellShares sell = new SellShares();
                             var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
                             Console.WriteLine("-------------------------------------------------------------------------------------");
-                            Console.WriteLine($"Sold {sharesOpen} shares of {tickerSymbol} at ${_CurrentPrice}");
+                            Console.WriteLine($"XELINA sold {sharesOpen} shares of {tickerSymbol} at ${_CurrentPrice}");
                             continue;
                         }
                         else if (gainOrLoss >= maximumGain)
@@ -186,7 +187,7 @@ namespace Example
                             SellShares sell = new SellShares();
                             var sellTicker = sell.ExecuteOrder(tickerSymbol, sharesOpen);
                             Console.WriteLine("-------------------------------------------------------------------------------------");
-                            Console.WriteLine($"Sold {sharesOpen} shares of {tickerSymbol} at ${_CurrentPrice}");
+                            Console.WriteLine($"XELINA sold {sharesOpen} shares of {tickerSymbol} at ${_CurrentPrice}");
                             continue;
                         }
                         else
@@ -200,9 +201,9 @@ namespace Example
 
             AccountSummary AccountSummary = new AccountSummary();
             var totalGainLoss = AccountSummary.ExecuteBalanceView();
-            
 
-            Console.ReadLine();
+
+           Console.ReadLine();
 
 
         }
