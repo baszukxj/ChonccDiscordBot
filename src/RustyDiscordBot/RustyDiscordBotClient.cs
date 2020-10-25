@@ -36,7 +36,7 @@ namespace RustyDiscordBot
         {
             _services = SetupServices();
 
-            await _client.LoginAsync(TokenType.Bot, "");
+            await _client.LoginAsync(TokenType.Bot, "NzE4NDgwMTExODAzOTU3MjU5.Xtpevw.1-IwAC4e4-eQGpa5UeGj-CS46eY");
             await _client.StartAsync();
             _client.Log += LogAsync;
             _client.Ready += OnReadyAsync;
