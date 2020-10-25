@@ -67,8 +67,9 @@ namespace RustyDiscordBot
             => new ServiceCollection()
             .AddSingleton(_client)
             .AddSingleton(_cmdService)
-            .AddSingleton<LavaNode>()
-            .AddSingleton<LavaConfig>()
+            .AddLavaNode(x => {
+                x.SelfDeaf = false;
+            })
             .AddSingleton<MusicService>()
             .AddLogging()
             .BuildServiceProvider();

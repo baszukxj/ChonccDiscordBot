@@ -9,19 +9,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Victoria;
 using Victoria.Enums;
+using Victoria.EventArgs;
 
 namespace RustyDiscordBot.Modules
 {
-    public class Music : ModuleBase<SocketCommandContext>
+    public sealed class Music : ModuleBase<SocketCommandContext>
     {
         private readonly LavaNode _lavaNode;
-        private readonly MusicService _musicManager;
-        private static readonly IEnumerable<int> Range = Enumerable.Range(1900, 2000);
 
-        public Music(LavaNode lavaNode, MusicService musicManager)
+        public Music(LavaNode lavaNode)
         {
             _lavaNode = lavaNode;
-            _musicManager = musicManager;
+            _lavaNode.OnTrackEnded += OnTrackEnded;
         }
 
         [Command("Join")]
@@ -34,7 +33,6 @@ namespace RustyDiscordBot.Modules
             }
 
             var voiceState = Context.User as IVoiceState;
-
             if (voiceState?.VoiceChannel == null)
             {
                 await ReplyAsync("You must be connected to a voice channel!");
@@ -52,26 +50,21 @@ namespace RustyDiscordBot.Modules
             }
         }
 
+
         [Command("Leave")]
         public async Task LeaveAsync()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            var voiceState = Context.User as IVoiceState;
+            if (voiceState?.VoiceChannel == null)
             {
-                await ReplyAsync("I'm not connected to any voice channels!");
-                return;
-            }
-
-            var voiceChannel = (Context.User as IVoiceState).VoiceChannel ?? player.VoiceChannel;
-            if (voiceChannel == null)
-            {
-                await ReplyAsync("Not sure which voice channel to disconnect from.");
+                await ReplyAsync("You must be connected to a voice channel!");
                 return;
             }
 
             try
             {
-                await _lavaNode.LeaveAsync(voiceChannel);
-                await ReplyAsync($"I've left {voiceChannel.Name}!");
+                await _lavaNode.LeaveAsync(voiceState.VoiceChannel);
+                await ReplyAsync($"Disconnected from {voiceState.VoiceChannel.Name}!");
             }
             catch (Exception exception)
             {
@@ -80,9 +73,9 @@ namespace RustyDiscordBot.Modules
         }
 
         [Command("Play")]
-        public async Task PlayAsync([Remainder] string query)
-        { 
-            if (string.IsNullOrWhiteSpace(query))
+        public async Task PlayAsync([Remainder] string searchQuery)
+        {
+            if (string.IsNullOrWhiteSpace(searchQuery))
             {
                 await ReplyAsync("Please provide search terms.");
                 return;
@@ -90,19 +83,19 @@ namespace RustyDiscordBot.Modules
 
             if (!_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm not connected to a voice channel.");
-                return;
+                await JoinAsync();
             }
 
-            var searchResponse = await _lavaNode.SearchSoundCloudAsync(query);
+
+            var searchResponse = await _lavaNode.SearchYouTubeAsync(searchQuery);
             if (searchResponse.LoadStatus == LoadStatus.LoadFailed ||
                 searchResponse.LoadStatus == LoadStatus.NoMatches)
             {
-                await ReplyAsync($"I wasn't able to find anything for `{query}`.");
+                await ReplyAsync($"I wasn't able to find anything for `{searchQuery}`.");
                 return;
             }
 
-            var player = _lavaNode.GetPlayer(Context.Guild);
+            var player = _lavaNode.GetPlayer(Context.Guild); 
 
             if (player.PlayerState == PlayerState.Playing || player.PlayerState == PlayerState.Paused)
             {
@@ -110,6 +103,7 @@ namespace RustyDiscordBot.Modules
                 {
                     foreach (var track in searchResponse.Tracks)
                     {
+                        
                         player.Queue.Enqueue(track);
                     }
 
@@ -149,161 +143,103 @@ namespace RustyDiscordBot.Modules
                     await ReplyAsync($"Now Playing: {track.Title}");
                 }
             }
+
         }
 
         [Command("Pause")]
         public async Task PauseAsync()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!_lavaNode.HasPlayer(Context.Guild))
             {
                 await ReplyAsync("I'm not connected to a voice channel.");
                 return;
             }
 
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await ReplyAsync("I cannot pause when I'm not playing anything!");
-                return;
-            }
+            var player = _lavaNode.GetPlayer(Context.Guild);
 
             try
             {
                 await player.PauseAsync();
-                await ReplyAsync($"Paused: {player.Track.Title}");
+                await ReplyAsync("Queue paused.");
             }
-            catch (Exception exception)
+            catch
             {
-                await ReplyAsync(exception.Message);
+                await ReplyAsync("Error.");
             }
         }
 
         [Command("Resume")]
         public async Task ResumeAsync()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!_lavaNode.HasPlayer(Context.Guild))
             {
                 await ReplyAsync("I'm not connected to a voice channel.");
                 return;
             }
 
-            if (player.PlayerState != PlayerState.Paused)
-            {
-                await ReplyAsync("I cannot resume when I'm not playing anything!");
-                return;
-            }
+            var player = _lavaNode.GetPlayer(Context.Guild);
 
             try
             {
                 await player.ResumeAsync();
-                await ReplyAsync($"Resumed: {player.Track.Title}");
+                await ReplyAsync("Queue resumed.");
             }
-            catch (Exception exception)
+            catch
             {
-                await ReplyAsync(exception.Message);
-            }
-        }
-
-        [Command("Stop")]
-        public async Task StopAsync()
-        {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
-            {
-                await ReplyAsync("I'm not connected to a voice channel.");
-                return;
-            }
-
-            if (player.PlayerState == PlayerState.Stopped)
-            {
-                await ReplyAsync("Woaaah there, I can't stop the stopped forced.");
-                return;
-            }
-
-            try
-            {
-                await player.StopAsync();
-                await ReplyAsync("No longer playing anything.");
-            }
-            catch (Exception exception)
-            {
-                await ReplyAsync(exception.Message);
+                await ReplyAsync("Error.");
             }
         }
 
         [Command("Skip")]
         public async Task SkipAsync()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!_lavaNode.HasPlayer(Context.Guild))
             {
                 await ReplyAsync("I'm not connected to a voice channel.");
                 return;
             }
 
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await ReplyAsync("Woaaah there, I can't skip when nothing is playing.");
-                return;
-            }
+            var player = _lavaNode.GetPlayer(Context.Guild);
 
             try
             {
-                var oldTrack = player.Track;
-                var currenTrack = await player.SkipAsync();
-                await ReplyAsync($"Skipped: {oldTrack.Title}\nNow Playing: {currenTrack.Title}");
+                await player.SkipAsync(); 
+                await ReplyAsync("Song skipped.");
+                await ReplyAsync($"Now Playing: {player.Track.Title}");
             }
-            catch (Exception exception)
+            catch
             {
-                await ReplyAsync(exception.Message);
+                await ReplyAsync("Error.");
             }
         }
 
-        [Command("Seek")]
-        public async Task SeekAsync(TimeSpan timeSpan)
+        [Command("Stop")]
+        public async Task StopAsync()
         {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
+            if (!_lavaNode.HasPlayer(Context.Guild))
             {
                 await ReplyAsync("I'm not connected to a voice channel.");
                 return;
             }
 
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await ReplyAsync("Woaaah there, I can't seek when nothing is playing.");
-                return;
-            }
+            var player = _lavaNode.GetPlayer(Context.Guild);
 
             try
             {
-                await player.SeekAsync(timeSpan);
-                await ReplyAsync($"I've seeked `{player.Track.Title}` to {timeSpan}.");
+                await player.StopAsync();
+                await ReplyAsync("Queue stopped.");
             }
-            catch (Exception exception)
+            catch
             {
-                await ReplyAsync(exception.Message);
+                await ReplyAsync("Error.");
             }
         }
 
-        [Command("Volume")]
-        public async Task VolumeAsync(ushort volume)
-        {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
-            {
-                await ReplyAsync("I'm not connected to a voice channel.");
-                return;
-            }
 
-            try
-            {
-                await player.UpdateVolumeAsync(volume);
-                await ReplyAsync($"I've changed the player volume to {volume}.");
-            }
-            catch (Exception exception)
-            {
-                await ReplyAsync(exception.Message);
-            }
-        }
+        private static readonly IEnumerable<int> Range = Enumerable.Range(1900, 2000);
 
-        [Command("NowPlaying"), Alias("Np")]
-        public async Task NowPlayingAsync()
+        [Command("Lyrics", RunMode = RunMode.Async)]
+        public async Task ShowGeniusLyrics()
         {
             if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
             {
@@ -317,59 +253,7 @@ namespace RustyDiscordBot.Modules
                 return;
             }
 
-            var track = player.Track;
-            var artwork = await track.FetchArtworkAsync();
-
-            var embed = new EmbedBuilder
-            {
-                Title = $"{track.Author} - {track.Title}",
-                ThumbnailUrl = artwork,
-                Url = track.Url
-            }
-                .AddField("Id", track.Id)
-                .AddField("Duration", track.Duration)
-                .AddField("Position", track.Position);
-
-            await ReplyAsync(embed: embed.Build());
-        }
-
-        [Command("Loop")]
-        public async Task Loop()
-        {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
-            {
-                await ReplyAsync("I'm not connected to a voice channel.");
-                return;
-            }
-            if(player.Queue.Count < 1 && player.PlayerState == PlayerState.Playing)
-            {
-                player.Queue.Enqueue(player.Track);
-                await ReplyAsync("Looping song once.");
-            }
-            else
-            {
-                player.Queue.Concat(player.Queue);
-                await ReplyAsync("Looping queue once.");
-            }
-        }
-
-
-        [Command("lyrics", RunMode = RunMode.Async)]
-        public async Task ShowOVHLyrics()
-        {
-            if (!_lavaNode.TryGetPlayer(Context.Guild, out var player))
-            {
-                await ReplyAsync("I'm not connected to a voice channel.");
-                return;
-            }
-
-            if (player.PlayerState != PlayerState.Playing)
-            {
-                await ReplyAsync("Woaaah there, I'm not playing any tracks.");
-                return;
-            }
-
-            var lyrics = await player.Track.FetchLyricsFromOVHAsync();
+            var lyrics = await player.Track.FetchLyricsFromGeniusAsync();
             if (string.IsNullOrWhiteSpace(lyrics))
             {
                 await ReplyAsync($"No lyrics found for {player.Track.Title}");
@@ -392,6 +276,29 @@ namespace RustyDiscordBot.Modules
             }
 
             await ReplyAsync($"```{stringBuilder}```");
+        }
+
+        private async Task OnTrackEnded(TrackEndedEventArgs args)
+        {
+            if (!args.Reason.ShouldPlayNext())
+            {
+                return;
+            }
+
+            var player = args.Player;
+            if (!player.Queue.TryDequeue(out var queueable))
+            {
+                return;
+            }
+
+            if (!(queueable is LavaTrack track))
+            {
+                return;
+            }
+
+            await args.Player.PlayAsync(track);
+            await args.Player.TextChannel.SendMessageAsync(
+                $"{args.Reason}: {args.Track.Title}\nNow playing: {track.Title}");
         }
     }
 }
