@@ -19,8 +19,7 @@ namespace RustyDiscordBot.Modules
 
         public Music(LavaNode lavaNode)
         {
-            _lavaNode = lavaNode;
-            _lavaNode.OnTrackEnded += OnTrackEnded;
+            _lavaNode = lavaNode;          
         }
 
         [Command("Join")]
@@ -95,7 +94,7 @@ namespace RustyDiscordBot.Modules
                 return;
             }
 
-            var player = _lavaNode.GetPlayer(Context.Guild); 
+            var player = _lavaNode.GetPlayer(Context.Guild);
 
             if (player.PlayerState == PlayerState.Playing || player.PlayerState == PlayerState.Paused)
             {
@@ -103,7 +102,7 @@ namespace RustyDiscordBot.Modules
                 {
                     foreach (var track in searchResponse.Tracks)
                     {
-                        
+
                         player.Queue.Enqueue(track);
                     }
 
@@ -203,7 +202,7 @@ namespace RustyDiscordBot.Modules
 
             try
             {
-                await player.SkipAsync(); 
+                await player.SkipAsync();
                 await ReplyAsync("Song skipped.");
                 await ReplyAsync($"Now Playing: {player.Track.Title}");
             }
@@ -233,6 +232,30 @@ namespace RustyDiscordBot.Modules
             {
                 await ReplyAsync("Error.");
             }
+        }
+
+        [Command("Queue")]
+        public async Task ShowQueueAsync()
+        {
+            if (!_lavaNode.HasPlayer(Context.Guild))
+            {
+                await ReplyAsync("I'm not connected to a voice channel.");
+                return;
+            }
+
+            var player = _lavaNode.GetPlayer(Context.Guild);
+            var stringBuilder = new StringBuilder();
+            int queueNumber = 1;
+
+            stringBuilder.AppendLine($"▶️{queueNumber}. {player.Track.Title} \n");
+
+            foreach (var track in player.Queue)
+            {
+                queueNumber++;
+                stringBuilder.AppendLine($"{queueNumber}. {track.Title}  \n");           
+            }
+
+            await ReplyAsync($"```{stringBuilder}```");
         }
 
 
@@ -278,27 +301,5 @@ namespace RustyDiscordBot.Modules
             await ReplyAsync($"```{stringBuilder}```");
         }
 
-        private async Task OnTrackEnded(TrackEndedEventArgs args)
-        {
-            if (!args.Reason.ShouldPlayNext())
-            {
-                return;
-            }
-
-            var player = args.Player;
-            if (!player.Queue.TryDequeue(out var queueable))
-            {
-                return;
-            }
-
-            if (!(queueable is LavaTrack track))
-            {
-                return;
-            }
-
-            await args.Player.PlayAsync(track);
-            await args.Player.TextChannel.SendMessageAsync(
-                $"{args.Reason}: {args.Track.Title}\nNow playing: {track.Title}");
-        }
     }
 }

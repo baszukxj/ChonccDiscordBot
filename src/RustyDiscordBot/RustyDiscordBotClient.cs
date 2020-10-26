@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using RustyDiscordBot.EventHandlers;
 using RustyDiscordBot.Services;
 using System;
 using System.Threading.Tasks;
@@ -36,7 +37,7 @@ namespace RustyDiscordBot
         {
             _services = SetupServices();
 
-            await _client.LoginAsync(TokenType.Bot, "TOKEN GOES HERE");
+            await _client.LoginAsync(TokenType.Bot, "");
             await _client.StartAsync();
             _client.Log += LogAsync;
             _client.Ready += OnReadyAsync;
@@ -50,9 +51,13 @@ namespace RustyDiscordBot
 
         private async Task OnReadyAsync()
         {
+            MusicEventHandler musicEventHandler = new MusicEventHandler();
+
             if (! (_services.GetService(typeof(LavaNode)) as LavaNode).IsConnected)
             {
-                await (_services.GetService(typeof(LavaNode)) as LavaNode).ConnectAsync();
+                await (_services.GetService(typeof(LavaNode)) as LavaNode).ConnectAsync();          
+                (_services.GetService(typeof(LavaNode)) as LavaNode).OnTrackEnded += musicEventHandler.OnTrackEnded;
+
                 return;
             }
         }
