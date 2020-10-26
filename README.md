@@ -7,7 +7,6 @@ A discord bot that helps you manage your server by providing useful commands lik
 * [Features](#features)
 * [Requirements](#requirements)
 * [Getting started](#getting-started)
-* [Common errors](#common-errors)
 * [Author](#author)
 * [License](#license)
 
@@ -52,7 +51,7 @@ Open solution of project in Visual Studio and build the application.
 
 ## Authors
 
-Xavier Baszuk, Hayden Sch
+Xavier Baszuk, Hayden Schuh, Xavier Adams
 
 ## License
 
