@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Victoria;
 using Victoria.Enums;
 
-namespace RustyDiscordBot.Modules
+namespace ChonccDiscordBot.Modules
 {
     public sealed class Music : ModuleBase<SocketCommandContext>
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Victoria;
 using Victoria.EventArgs;
 
-namespace RustyDiscordBot.Services
+namespace ChonccDiscordBot.Services
 {
     public class MusicService
     {

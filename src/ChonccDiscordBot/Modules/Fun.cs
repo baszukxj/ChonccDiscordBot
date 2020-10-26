@@ -3,7 +3,7 @@ using Discord.Commands;
 using System;
 using System.Threading.Tasks;
 
-namespace RustyDiscordBot.Modules
+namespace ChonccDiscordBot.Modules
 {
     public class Fun : ModuleBase<SocketCommandContext>
     {

@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 
-namespace RustyDiscordBot
+namespace ChonccDiscordBot
 {
     class Program
     {
         static async Task Main(string[] asrgs)
         {
-            await new RustyDiscordBotClient().InitializeAsync();
+            await new ChonccDiscordBotClient().InitializeAsync();
         }
 
         

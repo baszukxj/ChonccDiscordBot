@@ -2,21 +2,21 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using RustyDiscordBot.EventHandlers;
-using RustyDiscordBot.Services;
+using ChonccDiscordBot.EventHandlers;
+using ChonccDiscordBot.Services;
 using System;
 using System.Threading.Tasks;
 using Victoria;
 
-namespace RustyDiscordBot
+namespace ChonccDiscordBot
 {
-    public class RustyDiscordBotClient
+    public class ChonccDiscordBotClient
     {
         private DiscordSocketClient _client;
         private CommandService _cmdService;
         private IServiceProvider _services;
 
-        public RustyDiscordBotClient(DiscordSocketClient client = null, CommandService cmdService = null)
+        public ChonccDiscordBotClient(DiscordSocketClient client = null, CommandService cmdService = null)
         {
             _client = client ?? new DiscordSocketClient(new DiscordSocketConfig
             {

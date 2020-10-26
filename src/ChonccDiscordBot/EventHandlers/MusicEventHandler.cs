@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Victoria;
 using Victoria.EventArgs;
 
-namespace RustyDiscordBot.EventHandlers
+namespace ChonccDiscordBot.EventHandlers
 {
     public sealed class MusicEventHandler
     {
