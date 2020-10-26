@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Discord;
 using System.Threading.Tasks;
 using Victoria;
 using Victoria.EventArgs;
@@ -28,7 +26,10 @@ namespace RustyDiscordBot.EventHandlers
             }
 
             await args.Player.PlayAsync(track);
-            await args.Player.TextChannel.SendMessageAsync($"Now playing: {track.Title}");
+            var embed = new EmbedBuilder { Description = track.Title, Title = "Now playing" };
+            embed.WithColor(Color.Blue);
+            
+            await args.Player.TextChannel.SendMessageAsync(embed: embed.Build());
         }
     }
 }

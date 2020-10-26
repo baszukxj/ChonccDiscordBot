@@ -1,7 +1,5 @@
 ﻿using Discord;
 using Discord.Commands;
-using Discord.WebSocket;
-using RustyDiscordBot.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Victoria;
 using Victoria.Enums;
-using Victoria.EventArgs;
 
 namespace RustyDiscordBot.Modules
 {
@@ -19,7 +16,7 @@ namespace RustyDiscordBot.Modules
 
         public Music(LavaNode lavaNode)
         {
-            _lavaNode = lavaNode;          
+            _lavaNode = lavaNode;
         }
 
         [Command("Join")]
@@ -27,25 +24,24 @@ namespace RustyDiscordBot.Modules
         {
             if (_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm already connected to a voice channel!");
+                await FormatEmbedMessage("I'm already connected to a voice channel!");
                 return;
             }
 
             var voiceState = Context.User as IVoiceState;
             if (voiceState?.VoiceChannel == null)
             {
-                await ReplyAsync("You must be connected to a voice channel!");
+                await FormatEmbedMessage("You must be connected to a voice channel!");
                 return;
             }
 
             try
             {
                 await _lavaNode.JoinAsync(voiceState.VoiceChannel, Context.Channel as ITextChannel);
-                await ReplyAsync($"Joined {voiceState.VoiceChannel.Name}!");
             }
             catch (Exception exception)
             {
-                await ReplyAsync(exception.Message);
+                await FormatEmbedMessage(exception.Message);
             }
         }
 
@@ -56,18 +52,18 @@ namespace RustyDiscordBot.Modules
             var voiceState = Context.User as IVoiceState;
             if (voiceState?.VoiceChannel == null)
             {
-                await ReplyAsync("You must be connected to a voice channel!");
+                await FormatEmbedMessage("You must be connected to a voice channel!");
                 return;
             }
 
             try
             {
                 await _lavaNode.LeaveAsync(voiceState.VoiceChannel);
-                await ReplyAsync($"Disconnected from {voiceState.VoiceChannel.Name}!");
+                await FormatEmbedMessage($"Disconnected from {voiceState.VoiceChannel.Name}!");
             }
             catch (Exception exception)
             {
-                await ReplyAsync(exception.Message);
+                await FormatEmbedMessage(exception.Message);
             }
         }
 
@@ -76,7 +72,7 @@ namespace RustyDiscordBot.Modules
         {
             if (string.IsNullOrWhiteSpace(searchQuery))
             {
-                await ReplyAsync("Please provide search terms.");
+                await FormatEmbedMessage("Please provide search terms.");
                 return;
             }
 
@@ -90,7 +86,7 @@ namespace RustyDiscordBot.Modules
             if (searchResponse.LoadStatus == LoadStatus.LoadFailed ||
                 searchResponse.LoadStatus == LoadStatus.NoMatches)
             {
-                await ReplyAsync($"I wasn't able to find anything for `{searchQuery}`.");
+                await FormatEmbedMessage($"I wasn't able to find anything for `{searchQuery}`.");
                 return;
             }
 
@@ -106,13 +102,13 @@ namespace RustyDiscordBot.Modules
                         player.Queue.Enqueue(track);
                     }
 
-                    await ReplyAsync($"Enqueued {searchResponse.Tracks.Count} tracks.");
+                    await FormatEmbedMessage($"Enqueued {searchResponse.Tracks.Count} tracks.");
                 }
                 else
                 {
                     var track = searchResponse.Tracks[0];
                     player.Queue.Enqueue(track);
-                    await ReplyAsync($"Enqueued: {track.Title}");
+                    await FormatEmbedMessage($"Enqueued: {track.Title}");
                 }
             }
             else
@@ -126,7 +122,7 @@ namespace RustyDiscordBot.Modules
                         if (i == 0)
                         {
                             await player.PlayAsync(track);
-                            await ReplyAsync($"Now Playing: {track.Title}");
+                            await FormatEmbedMessage(track.Title, $"Now Playing");
                         }
                         else
                         {
@@ -134,12 +130,12 @@ namespace RustyDiscordBot.Modules
                         }
                     }
 
-                    await ReplyAsync($"Enqueued {searchResponse.Tracks.Count} tracks.");
+                    await FormatEmbedMessage($"Enqueued {searchResponse.Tracks.Count} tracks.");
                 }
                 else
                 {
                     await player.PlayAsync(track);
-                    await ReplyAsync($"Now Playing: {track.Title}");
+                    await FormatEmbedMessage(track.Title, "Now Playing");
                 }
             }
 
@@ -150,7 +146,7 @@ namespace RustyDiscordBot.Modules
         {
             if (!_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm not connected to a voice channel.");
+                await FormatEmbedMessage("I'm not connected to a voice channel.");
                 return;
             }
 
@@ -159,11 +155,11 @@ namespace RustyDiscordBot.Modules
             try
             {
                 await player.PauseAsync();
-                await ReplyAsync("Queue paused.");
+                await FormatEmbedMessage("Queue paused.");
             }
             catch
             {
-                await ReplyAsync("Error.");
+                await FormatEmbedMessage("Error.");
             }
         }
 
@@ -172,7 +168,7 @@ namespace RustyDiscordBot.Modules
         {
             if (!_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm not connected to a voice channel.");
+                await FormatEmbedMessage("I'm not connected to a voice channel.");
                 return;
             }
 
@@ -181,11 +177,11 @@ namespace RustyDiscordBot.Modules
             try
             {
                 await player.ResumeAsync();
-                await ReplyAsync("Queue resumed.");
+                await FormatEmbedMessage("Queue resumed.");
             }
             catch
             {
-                await ReplyAsync("Error.");
+                await FormatEmbedMessage("Error.");
             }
         }
 
@@ -194,7 +190,7 @@ namespace RustyDiscordBot.Modules
         {
             if (!_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm not connected to a voice channel.");
+                await FormatEmbedMessage("I'm not connected to a voice channel.");
                 return;
             }
 
@@ -203,12 +199,13 @@ namespace RustyDiscordBot.Modules
             try
             {
                 await player.SkipAsync();
-                await ReplyAsync("Song skipped.");
-                await ReplyAsync($"Now Playing: {player.Track.Title}");
+
+
+                await FormatEmbedMessage(player.Track.Title, "Now Playing");
             }
             catch
             {
-                await ReplyAsync("Error.");
+                await FormatEmbedMessage("Error.");
             }
         }
 
@@ -217,7 +214,7 @@ namespace RustyDiscordBot.Modules
         {
             if (!_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm not connected to a voice channel.");
+                await FormatEmbedMessage("I'm not connected to a voice channel.");
                 return;
             }
 
@@ -226,11 +223,11 @@ namespace RustyDiscordBot.Modules
             try
             {
                 await player.StopAsync();
-                await ReplyAsync("Queue stopped.");
+                await FormatEmbedMessage("Queue stopped.");
             }
             catch
             {
-                await ReplyAsync("Error.");
+                await FormatEmbedMessage("Error.");
             }
         }
 
@@ -239,7 +236,7 @@ namespace RustyDiscordBot.Modules
         {
             if (!_lavaNode.HasPlayer(Context.Guild))
             {
-                await ReplyAsync("I'm not connected to a voice channel.");
+                await FormatEmbedMessage("I'm not connected to a voice channel.");
                 return;
             }
 
@@ -252,7 +249,7 @@ namespace RustyDiscordBot.Modules
             foreach (var track in player.Queue)
             {
                 queueNumber++;
-                stringBuilder.AppendLine($"{queueNumber}. {track.Title}  \n");           
+                stringBuilder.AppendLine($"{queueNumber}. {track.Title}  \n");
             }
 
             await ReplyAsync($"```{stringBuilder}```");
@@ -300,6 +297,19 @@ namespace RustyDiscordBot.Modules
 
             await ReplyAsync($"```{stringBuilder}```");
         }
+        private async Task FormatEmbedMessage(string description, string title = null)
+        {
 
+            var embed = new EmbedBuilder{Description = description};
+            embed.WithColor(Color.Blue);
+            if (title != null)
+            {
+                embed.Title = title;
+            }
+
+            await ReplyAsync(embed: embed.Build());
+        }
     }
+
+
 }
