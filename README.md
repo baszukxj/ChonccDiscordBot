@@ -1,20 +1,18 @@
 # Choncc Discord bot
 
-A discord bot that helps you manage your server by providing useful commands like playing music or deleting text messages. 
+A discord bot that helps you manage your server by providing useful commands like playing music. 
 
 ## Table of content
 
 * [Features](#features)
 * [Requirements](#requirements)
 * [Getting started](#getting-started)
-* [Author](#author)
+* [Author](#authors)
 * [License](#license)
 
 ## Features
-- Play music
-- Skip songs
-- Stop music
-- Send fun commands
+- Play music, skip songs, Stop musi, and more queue management stuff
+- Rate users
 
 ## Requirements
 - [Docker](https://www.docker.com/) (optional)-
