@@ -11,13 +11,14 @@ A discord bot that helps you manage your server by providing useful commands lik
 * [License](#license)
 
 ## Features
-- Play music, skip songs, Stop musi, and more queue management stuff
-- Rate users
+- Play music and manage a queue of music
+- Rate users based on categories
+- More to come!
 
 ## Requirements
-- [Docker](https://www.docker.com/) (optional)-
 - [Visual Studio or other c# IDE](https://visualstudio.microsoft.com/downloads/)
 - [Java 10+](https://www.oracle.com/java/technologies/javase-jdk13-downloads.html)
+- [Docker](https://www.docker.com/) (optional)
 
 ## Getting started
 
@@ -32,8 +33,10 @@ git clone https://github.com/baszukxj/ChonccDiscordBot.git
 # Enter into the directory
 run 'cd ChonccDiscordBot/src/Lavalink Server/' with command prompt on windows
 
-# Run the Lavalink jar file
+# Run the Lavalink jar file 
 run 'java -jar Lavalink.jar' with command prompt on windows
+
+# Use docker to mount Lavalink.jar (optional)
 
 ```
 
