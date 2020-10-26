@@ -6,6 +6,9 @@ using ChonccDiscordBot.EventHandlers;
 using System;
 using System.Threading.Tasks;
 using Victoria;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace ChonccDiscordBot
 {
@@ -35,8 +38,9 @@ namespace ChonccDiscordBot
         public async Task InitializeAsync()
         {
             _services = SetupServices();
+            var secrets = await ConfigureSecrets();
 
-            await _client.LoginAsync(TokenType.Bot, "");
+            await _client.LoginAsync(TokenType.Bot, secrets.DiscordBotSecret);
             await _client.StartAsync();
             _client.Log += LogAsync;
             _client.Ready += OnReadyAsync;
@@ -76,5 +80,23 @@ namespace ChonccDiscordBot
             })
             .AddLogging()
             .BuildServiceProvider();
+
+        private async Task<Secrets> ConfigureSecrets()
+        {
+            var json = string.Empty;
+
+            using (var fs = File.OpenRead("secrets.json"))
+            {
+                using var sr = new StreamReader(fs, new UTF8Encoding(false));
+                json = await sr.ReadToEndAsync().ConfigureAwait(false);
+            }
+
+            return JsonConvert.DeserializeObject<Secrets>(json);
+        }
+    }
+
+    public class Secrets
+    {
+        public string DiscordBotSecret { get; set; }
     }
 }
