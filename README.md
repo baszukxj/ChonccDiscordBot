@@ -27,13 +27,13 @@ First, make sure you have all the required tools installed on your local machine
 
 ```bash
 # Clone the repository
-git clone https://github.com/baszsukxj/ChonccDiscordBot.git
+git clone https://github.com/baszukxj/ChonccDiscordBot.git
 
 # Enter into the directory
-'cd ChonccDiscordBot/src/Lavalink Server/' with cmd on windows
+run 'cd ChonccDiscordBot/src/Lavalink Server/' with command prompt on windows
 
 # Run the Lavalink jar file
-'java -jar Lavalink.jar'
+run 'java -jar Lavalink.jar' with command prompt on windows
 
 ```
 
@@ -44,7 +44,7 @@ After cloning the project, you need to add your Discord API token in the ChonccD
 ### Starting the application
 
 ```bash
-Open solution of project in Visual Studio and build the application.
+Open solution in Visual Studio and build the application AFTER adding token to ChonccDiscordBot.cs.
 ```
 
 ## Authors
