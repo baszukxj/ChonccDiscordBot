@@ -3,7 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using ChonccDiscordBot.EventHandlers;
-using ChonccDiscordBot.Services;
 using System;
 using System.Threading.Tasks;
 using Victoria;
@@ -73,9 +72,8 @@ namespace ChonccDiscordBot
             .AddSingleton(_client)
             .AddSingleton(_cmdService)
             .AddLavaNode(x => {
-                x.SelfDeaf = false;
+                x.SelfDeaf = true;               
             })
-            .AddSingleton<MusicService>()
             .AddLogging()
             .BuildServiceProvider();
     }
