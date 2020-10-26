@@ -1,7 +1,59 @@
-# ChonccDiscordBot
+# Choncc Discord bot
 
-# Purpose
-The purpose of this project is to development a discord bot that will perform helpful tasks, automate day to day processes, and provide administration of servers for users of discord.
+A discord bot that helps you manage your server by providing useful commands like playing music or deleting text messages. 
 
-# Intended Audience
-The intended audience of this project is discord users, specifically those that make use of discord daily.
+## Table of content
+
+* [Features](#features)
+* [Requirements](#requirements)
+* [Getting started](#getting-started)
+* [Common errors](#common-errors)
+* [Author](#author)
+* [License](#license)
+
+## Features
+- Play music
+- Skip songs
+- Stop music
+- Send fun commands
+
+## Requirements
+- [Docker](https://www.docker.com/) (optional)-
+- [Visual Studio or other c# IDE](https://visualstudio.microsoft.com/downloads/)
+- [Java 10+](https://www.oracle.com/java/technologies/javase-jdk13-downloads.html)
+
+## Getting started
+
+First, make sure you have all the required tools installed on your local machine then continue with these steps.
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/baszsukxj/ChonccDiscordBot.git
+
+# Enter into the directory
+'cd ChonccDiscordBot/src/Lavalink Server/' with cmd on windows
+
+# Run the Lavalink jar file
+'java -jar Lavalink.jar'
+
+```
+
+### Configuration
+
+After cloning the project, you need to add your Discord API token in the ChonccDiscordBot.cs file.
+
+### Starting the application
+
+```bash
+Open solution of project in Visual Studio and build the application.
+```
+
+## Authors
+
+Xavier Baszuk, Hayden Sch
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
