@@ -9,6 +9,7 @@ using Victoria;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using ChonccDiscordBot.Adapters;
 
 namespace ChonccDiscordBot
 {
@@ -75,8 +76,10 @@ namespace ChonccDiscordBot
             => new ServiceCollection()
             .AddSingleton(_client)
             .AddSingleton(_cmdService)
+            .AddSingleton(new TwitchAdapter())
             .AddLavaNode(x => {
-                x.SelfDeaf = true;               
+                x.SelfDeaf = true;
+                x.Port = 2332;
             })
             .AddLogging()
             .BuildServiceProvider();
@@ -98,5 +101,7 @@ namespace ChonccDiscordBot
     public class Secrets
     {
         public string DiscordBotSecret { get; set; }
+        public string TwitchClientSecret { get; set; }
+        public string TwitchClientId { get; set; }
     }
 }

